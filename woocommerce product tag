@@ -1,0 +1,77 @@
+
+<div class="rating">
+      <?php add_star_rating(); ?>
+</div>
+
+===============================================================
+
+<div class="updetails">
+   <p class="price">$<?php echo $product->get_price(); ?></p>
+       <p class="offer"><?php woocommerce_show_product_sale_flash( $post, $product ); ?></p>
+</div>
+      
+==================================================================
+
+<a href="<?php echo get_permalink( $loop->post->ID ) ?>">
+    <?php echo get_the_post_thumbnail($loop->post->ID, 'shop_catalog');?>
+</a>
+
+===================================================================
+
+  <?php
+        $args = array(
+            'post_type' => 'product',
+            'posts_per_page' => 12
+            );
+        $loop = new WP_Query( $args );
+        if ( $loop->have_posts() ) {
+            while ( $loop->have_posts() ) : $loop->the_post();
+                wc_get_template_part( 'content', 'product' );
+            endwhile;
+        } else {
+            echo __( 'No products found' );
+        }
+        wp_reset_postdata();
+   ?>
+
+========================================================================
+
+<?php the_title(); ?>
+
+========================================================================
+
+<?php
+$params = array('posts_per_page' => 5); 
+$wc_query = new WP_Query($params); 
+?>
+<?php if ($wc_query->have_posts()) : ?>
+<?php while ($wc_query->have_posts()) : 
+                $wc_query->the_post();?>
+<?php the_title(); (4.2) ?>
+<?php endwhile; ?>
+<?php wp_reset_postdata();?>
+<?php else:  ?>
+<p>
+     <?php _e( 'No Products' );?>
+</p>
+<?php endif; ?>
+
+==========================================================================
+
+$params = array(
+        'posts_per_page' => 5,
+        'post_type' => 'product'
+);
+
+============================================================================
+
+Display Only On-Sale products in Shop:
+
+function so_20990199_product_query( $q ){ 
+	$product_ids_on_sale = wc_get_product_ids_on_sale(); 
+	$q->set( 'post__in', (array) $product_ids_on_sale ); 
+}
+add_action( 'woocommerce_product_query', 'so_20990199_product_query' );
+
+=============================================================================
+
